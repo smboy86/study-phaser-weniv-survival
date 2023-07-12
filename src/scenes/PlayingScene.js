@@ -156,30 +156,36 @@ export default class PlayingScene extends Phaser.Scene {
       .on('update', this.dumpJoyStickState, this)
       .on('pointerdown', function () {
         // 눌럿을때
-        // console.log('pointerdown');
+        console.log('on pointerdown');
       })
       .on('pointerup', function () {
         // 땟을때
-        // console.log('pointerup');
+        console.log('on pointerup');
       });
+
+    this.m_joy_cursorKeys = this.joyStick.createCursorKeys();
 
     this.input.on('pointerdown', (pointer) => {
       console.log('pointerdown');
 
-      //   console.log('111   :: ', !pointer.wasTouch);
-      // 모바일 이라면? 이런 뜻인가
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+
+      //// 모바일 이라면? 이런 뜻인가
       //   if (!pointer.wasTouch) {
       //     return;
       //   }
 
-      //   console.log('222222');
-      if (pointer.event.touches.length === 1) {
+      // 화면 터치시 undefiend erro 수정
+      if (pointer.event.touches == undefined) {
+        this.joyStick.visible = false;
+      } else if (pointer.event.touches.length === 1) {
         this.joyStick.x = pointer.x;
         this.joyStick.y = pointer.y;
         this.joyStick.visible = true;
         this.joyStick.enable = true;
-      } else {
-        this.joyStick.visible = false;
       }
     });
 
@@ -190,55 +196,100 @@ export default class PlayingScene extends Phaser.Scene {
   }
 
   dumpJoyStickState() {
-    var cursorKeys = this.joyStick.createCursorKeys();
-    var s = 'Key down: ';
-    // for (var name in cursorKeys) {
-    //   if (cursorKeys[name].isDown) {
-    //     console.log('key ???  :::  ', cursorKeys[name]);
-    //   }
-    // }
+    let direction = '';
 
-    let vector = [0, 0];
-
-    if (cursorKeys.up.isDown) {
-      //   console.log('위');
-      vector[1] += -1;
-    } else if (cursorKeys.down.isDown) {
-      vector[1] += 1;
-    } else if (cursorKeys.left.isDown) {
-      //   console.log('왼쪽');
-      vector[0] += -1;
-    } else if (cursorKeys.right.isDown) {
-      vector[0] += 1;
+    for (let key in this.m_joy_cursorKeys) {
+      if (this.m_joy_cursorKeys[key].isDown) {
+        direction += key;
+      }
     }
 
-    // 케릭터 이동
-    // let vector = [0, 0];
-    // if (this.m_cursorKeys.left.isDown) {
-    //   // player.x -= PLAYER_SPEED // 공개영상에서 진행했던 것
-    //   vector[0] += -1;
-    // } else if (this.m_cursorKeys.right.isDown) {
-    //   vector[0] += 1;
-    // }
+    //// 방향이 없으면 멈춘다
+    if (direction.length === 0) {
+      // console.log('방향 없음 ');
+      if (this.m_player.m_moving) {
+        this.m_player.play('player_idle');
+      }
+      this.m_player.m_moving = false;
+    }
 
-    // if (this.m_cursorKeys.up.isDown) {
-    //   vector[1] += -1;
-    // } else if (this.m_cursorKeys.down.isDown) {
-    //   vector[1] += 1;
-    // }
+    //// 마지막 방향이 다르면 멈춘다?
+    if (this.lastCursorDirection !== direction) {
+      if (this.m_player.m_moving) {
+        this.m_player.play('player_idle');
+      }
+      this.m_player.m_moving = false;
+    }
+
+    console.log('몇초마다 업데이트 되나?   ', this.lastCursorDirection);
+
+    this.lastCursorDirection = direction;
+
+    let vector = [0, 0];
+    if (this.lastCursorDirection === 'up') {
+      vector[1] += -1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'down') {
+      vector[1] += 1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'right') {
+      vector[0] += 1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'left') {
+      vector[0] += -1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'upright') {
+      vector[1] += -1;
+      vector[0] += 1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'downright') {
+      vector[1] += 1;
+      vector[0] += 1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'downleft') {
+      vector[1] += 1;
+      vector[0] += -1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else if (this.lastCursorDirection === 'upleft') {
+      vector[1] += -1;
+      vector[0] += -1;
+      if (!this.m_player.m_moving) {
+        this.m_player.play('player_anim');
+      }
+      this.m_player.m_moving = true;
+    } else {
+      if (this.m_player.m_moving) {
+        this.m_player.play('player_idle');
+      }
+      this.m_player.m_moving = false;
+    }
 
     this.m_player.move(vector);
 
-    // s += `Force: ${Math.floor(this.joyStick.force * 100) / 100} Angle: ${
-    //   Math.floor(this.joyStick.angle * 100) / 100
-    // }`;
-
-    // s += '\nTimestamp:\n';
-    // for (var name in cursorKeys) {
-    //   var key = cursorKeys[name];
-    //   s += `${name}: duration=${key.duration / 1000}\n`;
-    // }
-    // this.text.setText(s);
+    this.m_weaponStatic.children.each((weapon) => {
+      weapon.move(vector);
+    }, this);
   }
 
   update() {
