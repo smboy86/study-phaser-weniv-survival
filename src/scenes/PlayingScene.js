@@ -10,6 +10,7 @@ import {
   setAttackScale,
   setAttackDamage,
   addAttackEvent,
+  removeAttack,
 } from '../utils/attackManager';
 import { pause } from '../utils/pauseManager';
 import { createTime } from '../utils/time';
@@ -276,23 +277,11 @@ export default class PlayingScene extends Phaser.Scene {
     console.log('levelup :::  ', this.m_topBar.m_level);
 
     switch (this.m_topBar.m_level) {
-      // case 2:
-      //   removeOldestMobEvent(this);
-      //   addMobEvent(this, 1000, 'mob2', 'mob2_anim', 20, 0.8);
-      //   // claw 공격 크기 확대
-      //   setAttackScale(this, 'claw', 4);
-      //   break;
       case 2:
         removeOldestMobEvent(this);
         addMobEvent(this, 1000, 'mob2', 'mob2_anim', 20, 0.8);
         // claw 공격 크기 확대
-        console.log('11111');
-        // claw 공격 삭제
-        removeAttack(this, 'claw');
-        // beam 공격 추가
-        addAttackEvent(this, 'beam', 10, 1, 1000);
-        console.log('22222');
-        break;
+        setAttackScale(this, 'claw', 4);
         break;
       case 3:
         removeOldestMobEvent(this);
@@ -308,12 +297,10 @@ export default class PlayingScene extends Phaser.Scene {
         setBackground(this, 'background3');
         break;
       case 5:
-        console.log('11111');
         // claw 공격 삭제
         removeAttack(this, 'claw');
         // beam 공격 추가
         addAttackEvent(this, 'beam', 10, 1, 1000);
-        console.log('22222');
         break;
       case 6:
         // beam 공격 크기 및 데미지 확대
