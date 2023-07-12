@@ -69,6 +69,8 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_attackEvents = {};
     // scene, attackType, attackDamage, attackScale, repeatGap
     addAttackEvent(this, 'claw', 10, 2.3, 1500);
+    // 빔도 기본 공격
+    // addAttackEvent(this, 'beam', 10, 1, 1000);
 
     // 보스몹이 잘 추가되는지 확인하기 위해 create 메서드 내에서 addMob을 실행시켜봅니다.
     // addMob(this, "lion", "lion_anim", 100, 0);
@@ -271,13 +273,26 @@ export default class PlayingScene extends Phaser.Scene {
 
   afterLevelUp() {
     this.m_topBar.gainLevel();
+    console.log('levelup :::  ', this.m_topBar.m_level);
 
     switch (this.m_topBar.m_level) {
+      // case 2:
+      //   removeOldestMobEvent(this);
+      //   addMobEvent(this, 1000, 'mob2', 'mob2_anim', 20, 0.8);
+      //   // claw 공격 크기 확대
+      //   setAttackScale(this, 'claw', 4);
+      //   break;
       case 2:
         removeOldestMobEvent(this);
         addMobEvent(this, 1000, 'mob2', 'mob2_anim', 20, 0.8);
         // claw 공격 크기 확대
-        setAttackScale(this, 'claw', 4);
+        console.log('11111');
+        // claw 공격 삭제
+        removeAttack(this, 'claw');
+        // beam 공격 추가
+        addAttackEvent(this, 'beam', 10, 1, 1000);
+        console.log('22222');
+        break;
         break;
       case 3:
         removeOldestMobEvent(this);
@@ -293,10 +308,12 @@ export default class PlayingScene extends Phaser.Scene {
         setBackground(this, 'background3');
         break;
       case 5:
+        console.log('11111');
         // claw 공격 삭제
         removeAttack(this, 'claw');
         // beam 공격 추가
         addAttackEvent(this, 'beam', 10, 1, 1000);
+        console.log('22222');
         break;
       case 6:
         // beam 공격 크기 및 데미지 확대

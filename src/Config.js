@@ -5,10 +5,15 @@ import GameOverScene from './scenes/GameOverScene';
 import GameClearScene from './scenes/GameClearScene';
 // import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
 
+const width = window.innerWidth;
+const height = window.innerHeight;
+
 const Config = {
   // 게임 화면의 크기와 색을 설정하는 부분입니다.
-  width: 800,
-  height: 600,
+  // width: 800,
+  // height: 600,
+  width: width,
+  height: height,
   backgroundColor: 0x000000,
 
   // 사용할 scene은 config의 scene 프로퍼티의 배열에 추가해줘야 합니다.
@@ -24,7 +29,8 @@ const Config = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: process.env.DEBUG === 'true',
+      // debug: process.env.DEBUG === 'true',
+      debug: true,
     },
   },
   //   plugins: {
